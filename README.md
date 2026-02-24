@@ -18,8 +18,7 @@ The system uses **frontier AI models** (OpenAI, Anthropic Claude, or Google Gemi
 ### Data Source
 
 - **MongoDB Atlas (read-only)**  
-  Connection string is hard-coded in the backend for this assignment:
-  - `mongodb+srv://catalog-readonly:vcRvxWHQSKUEwd7V@catalog.sontifs.mongodb.net/catalog`
+  Connection string is configured via environment variables (see setup instructions below):
   - Database: `catalog`
   - Collection: `products`
 
@@ -34,7 +33,7 @@ The backend treats products as immutable and **never modifies the database**.
 Key files (in `backend/src`):
 
 - `index.ts`: Express app bootstrap (`/health`, `/api/search`, error handling).
-- `config/env.ts`: Central configuration (port, Mongo URI).
+- `config/env.ts`: Central configuration (port, Mongo URI from environment variables).
 - `services/mongoClient.ts`: MongoDB client and `fetchAllProducts()` helper with connection pooling.
 - `services/aiProvider.ts`: Multi-provider abstraction for OpenAI, Anthropic, and Google AI clients.
 - `services/embeddingCache.ts`: In-memory embedding cache and cosine similarity computation.
@@ -244,7 +243,25 @@ cd ../frontend
 npm install
 ```
 
-### 2. Run the Backend
+### 2. Configure Environment Variables
+
+Create a `.env` file in the `backend` directory:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Then edit `.env` and set your MongoDB connection string:
+
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
+PORT=4000
+```
+
+**Important**: The `.env` file is already in `.gitignore` and will not be committed to version control. Never commit sensitive credentials like MongoDB connection strings.
+
+### 3. Run the Backend
 
 From `backend`:
 
@@ -266,7 +283,7 @@ You should see:
 { "status": "ok" }
 ```
 
-### 3. Run the Frontend
+### 4. Run the Frontend
 
 From `frontend`:
 
@@ -276,7 +293,7 @@ npm run dev
 
 Vite will print a local URL, typically `http://localhost:5173`. Open it in your browser.
 
-### 4. Using the App
+### 5. Using the App
 
 1. Click the **API Keys** button in the header and enter your AI provider API keys.
 2. Go to the **Search** tab.
